@@ -1,4 +1,7 @@
-function createCard(name, link, likes, imagePopup, imagePopupImage, imagePopupCaption, openModal) {
+import {deleteCard} from "../components/api.js";
+
+
+function createCard(name, link, likes, owner, cardId, imagePopup, imagePopupImage, imagePopupCaption, openModal) {
 	const cardTemplate = document.querySelector("#card-template").content;
 	const cardElement = cardTemplate.querySelector(".card").cloneNode(true);
 
@@ -17,9 +20,20 @@ function createCard(name, link, likes, imagePopup, imagePopupImage, imagePopupCa
 	);
 
 	const deleteButton = cardElement.querySelector(".card__delete-button");
-	deleteButton.addEventListener("click", () =>
-		deleteButton.closest(".card").remove()
-	);
+	if (owner){
+		deleteButton.addEventListener("click", () => {
+			deleteCard(cardId)
+				.then(res => {
+					deleteButton.closest(".card").remove();
+					console.log(res.json())
+				})
+		}	
+		);
+	}
+	else {
+		deleteButton.disabled = true;
+		deleteButton.style.display = 'none';
+	}
 
 	cardImage.addEventListener("click", () => {
 		imagePopupImage.src = link;

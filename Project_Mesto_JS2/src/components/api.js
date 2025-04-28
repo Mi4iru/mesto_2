@@ -51,4 +51,11 @@ function addCard(name, link) {
     })
 }
 
-export {getInitialCards, fillProfile, editProfile, addCard}
+function deleteCard(cardId) {
+    return fetch(`${config.baseUrl}/cards/${cardId}`, {
+        method: 'DELETE',
+        headers: config.headers
+    })
+}
+
+export {getInitialCards, fillProfile, editProfile, addCard, deleteCard}

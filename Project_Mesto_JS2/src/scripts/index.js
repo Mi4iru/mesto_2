@@ -67,12 +67,24 @@ const onClosePopup = (popup) => {
 
 const { openModal, closeModal } = getModal(onOpenPopup, onClosePopup);
 
+let userId;
+
+fillProfile().then(prof => {
+	profileTitle.textContent = prof.name;
+	profileDescription.textContent = prof.about;
+	userId = prof._id;
+	profileImage.style.backgroundImage = `url(${prof.avatar})`;
+
+})
+
 getInitialCards().then(cards => {
 	cards.forEach((card) => {
 		const cardElement = createCard(
 			card.name,
 			card.link,
 			card.likes,
+			card.owner._id == userId,
+			card._id,
 			imagePopup,
 			imagePopupImage,
 			imagePopupCaption,
@@ -82,11 +94,7 @@ getInitialCards().then(cards => {
 	});
 });
 
-fillProfile().then(prof => {
-	profileTitle.textContent = prof.name;
-	profileDescription.textContent = prof.about;
-	profileImage.style.backgroundImage = `url(${prof.avatar})`;
-})
+
 
 profileEditButton.addEventListener("click", () => {
 	nameInput.value = profileTitle.textContent;
@@ -134,7 +142,14 @@ function handleCardFormSubmit(evt) {
 	addCard(name, link)
 		.then(res => res.json())
 			.then(res => {
-				const newCard = createCard(res.name, res.link, res.likes);
+				const newCard = createCard(res.name, 
+										   res.link, 
+										   res.likes,
+										   true,
+										   res._id,
+										   imagePopup,
+										   imagePopupImage,
+										   openModal);
 				placesContainer.prepend(newCard);
 				closeModal(cardPopup);
 			})
