@@ -1,7 +1,7 @@
-import {deleteCard} from "../components/api.js";
+import {deleteCard, toggleLike} from "../components/api.js";
 
 
-function createCard(name, link, likes, owner, cardId, imagePopup, imagePopupImage, imagePopupCaption, openModal) {
+function createCard(name, link, likes, owner, liked, cardId, imagePopup, imagePopupImage, imagePopupCaption, openModal) {
 	const cardTemplate = document.querySelector("#card-template").content;
 	const cardElement = cardTemplate.querySelector(".card").cloneNode(true);
 
@@ -15,8 +15,17 @@ function createCard(name, link, likes, owner, cardId, imagePopup, imagePopupImag
 	cardLikes.textContent = likes.length;
 
 	const likeButton = cardElement.querySelector(".card__like-button");
-	likeButton.addEventListener("click", () =>
-		likeButton.classList.toggle("card__like-button_is-active")
+	if (liked) { likeButton.classList.add("card__like-button_is-active"); }
+	likeButton.addEventListener("click", () => {
+			toggleLike(cardId, likeButton.classList.contains("card__like-button_is-active"))
+				.then(res => res.json())
+					.then(res => {
+						likeButton.classList.toggle("card__like-button_is-active");
+						cardLikes.textContent = res.likes.length;
+					})
+			
+		}
+		
 	);
 
 	const deleteButton = cardElement.querySelector(".card__delete-button");

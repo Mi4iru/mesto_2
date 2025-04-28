@@ -68,22 +68,33 @@ const onClosePopup = (popup) => {
 const { openModal, closeModal } = getModal(onOpenPopup, onClosePopup);
 
 let userId;
+let user;
 
 fillProfile().then(prof => {
 	profileTitle.textContent = prof.name;
 	profileDescription.textContent = prof.about;
 	userId = prof._id;
 	profileImage.style.backgroundImage = `url(${prof.avatar})`;
+	user = prof;
 
 })
 
 getInitialCards().then(cards => {
 	cards.forEach((card) => {
+		let liked = false;
+		for(let i=0; i<card.likes.length; i++){
+			if (card.likes[i].name == user.name &&
+				card.likes[i].about == user.about) {
+					liked = true; 
+					break
+				}
+		}
 		const cardElement = createCard(
 			card.name,
 			card.link,
 			card.likes,
 			card.owner._id == userId,
+			liked,
 			card._id,
 			imagePopup,
 			imagePopupImage,
@@ -146,6 +157,7 @@ function handleCardFormSubmit(evt) {
 										   res.link, 
 										   res.likes,
 										   true,
+										   false,
 										   res._id,
 										   imagePopup,
 										   imagePopupImage,

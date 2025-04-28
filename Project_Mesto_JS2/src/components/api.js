@@ -58,4 +58,19 @@ function deleteCard(cardId) {
     })
 }
 
-export {getInitialCards, fillProfile, editProfile, addCard, deleteCard}
+function toggleLike(cardId, liked) {
+    let method;
+    if (liked) {
+        method = 'DELETE';
+    }
+    else {
+        method = 'PUT';
+    }
+    return fetch(`${config.baseUrl}/cards/likes/${cardId}`, {
+        method: method,
+        headers: config.headers
+    })
+    
+} 
+
+export {getInitialCards, fillProfile, editProfile, addCard, deleteCard, toggleLike}
