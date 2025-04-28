@@ -40,4 +40,15 @@ function editProfile(name, description) {
     })
 }
 
-export {getInitialCards, fillProfile, editProfile}
+function addCard(name, link) {
+    return fetch(`${config.baseUrl}/cards`, {
+        method: 'POST',
+        headers: config.headers,
+        body: JSON.stringify({
+            name: name,
+            link: link
+        })
+    })
+}
+
+export {getInitialCards, fillProfile, editProfile, addCard}

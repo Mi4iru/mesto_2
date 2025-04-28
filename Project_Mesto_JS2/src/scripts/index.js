@@ -10,7 +10,8 @@ import { createCard } from "../components/card.js";
 import { 
 	getInitialCards, 
 	fillProfile,
-	editProfile
+	editProfile,
+	addCard
 } from "../components/api.js";
 
 const profilePopup = document.querySelector(".popup_type_edit");
@@ -130,9 +131,14 @@ function handleCardFormSubmit(evt) {
 	const name = cardNameInput.value;
 	const link = cardLinkInput.value;
 
-	const newCard = createCard(name, link);
-	placesContainer.prepend(newCard);
-	closeModal(cardPopup);
+	addCard(name, link)
+		.then(res => res.json())
+			.then(res => {
+				const newCard = createCard(res.name, res.link, res.likes);
+				placesContainer.prepend(newCard);
+				closeModal(cardPopup);
+			})
+	
 }
 
 cardFormElement.addEventListener("submit", handleCardFormSubmit);
