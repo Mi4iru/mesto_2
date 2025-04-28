@@ -6,7 +6,12 @@ import {
 	hideInputError,
 } from "../components/validate.js";
 import { getModal } from "../components/modal.js";
-import { createCard, initialCards } from "../components/card.js";
+import { createCard } from "../components/card.js";
+import { 
+	getInitialCards, 
+	fillProfile,
+	editProfile
+} from "../components/api.js";
 
 const profilePopup = document.querySelector(".popup_type_edit");
 const imagePopup = document.querySelector(".popup_type_image");
@@ -32,6 +37,7 @@ const cardLinkInput = cardPopup.querySelector(".popup__input_type_url");
 
 const profileTitle = document.querySelector(".profile__title");
 const profileDescription = document.querySelector(".profile__description");
+const profileImage = document.querySelector(".profile__image");
 
 const placesContainer = document.querySelector(".places__list");
 
@@ -60,17 +66,26 @@ const onClosePopup = (popup) => {
 
 const { openModal, closeModal } = getModal(onOpenPopup, onClosePopup);
 
-initialCards.forEach((card) => {
-	const cardElement = createCard(
-		card.name,
-		card.link,
-		imagePopup,
-		imagePopupImage,
-		imagePopupCaption,
-		openModal
-	);
-	placesContainer.append(cardElement);
+getInitialCards().then(cards => {
+	cards.forEach((card) => {
+		const cardElement = createCard(
+			card.name,
+			card.link,
+			card.likes,
+			imagePopup,
+			imagePopupImage,
+			imagePopupCaption,
+			openModal
+		);
+		placesContainer.append(cardElement);
+	});
 });
+
+fillProfile().then(prof => {
+	profileTitle.textContent = prof.name;
+	profileDescription.textContent = prof.about;
+	profileImage.style.backgroundImage = `url(${prof.avatar})`;
+})
 
 profileEditButton.addEventListener("click", () => {
 	nameInput.value = profileTitle.textContent;
@@ -87,10 +102,17 @@ function handleProfileFormSubmit(evt) {
 	const name = nameInput.value;
 	const job = jobInput.value;
 
-	profileTitle.textContent = name;
-	profileDescription.textContent = job;
+	editProfile(name, job)
+		.then(res => res.json())
+			.then(res => {
+				profileTitle.textContent = res['name'];
+				profileDescription.textContent = res.about;
+				closeModal(profilePopup);
+			})
+	
+	
 
-	closeModal(profilePopup);
+	
 }
 
 profileFormElement.addEventListener("submit", handleProfileFormSubmit);
