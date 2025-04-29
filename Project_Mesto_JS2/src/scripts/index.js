@@ -17,6 +17,7 @@ import {
 const profilePopup = document.querySelector(".popup_type_edit");
 const imagePopup = document.querySelector(".popup_type_image");
 const cardPopup = document.querySelector(".popup_type_new-card");
+const avatarPopup = document.querySelector(".popup_type_update-avatar");
 
 const imagePopupImage = imagePopup.querySelector(".popup__image");
 const imagePopupCaption = imagePopup.querySelector(".popup__caption");
@@ -27,14 +28,17 @@ const profileAddButton = document.querySelector(".profile__add-button");
 const profilePopupCloseButton = profilePopup.querySelector(".popup__close");
 const cardPopupCloseButton = cardPopup.querySelector(".popup__close");
 const imagePopupCloseButton = imagePopup.querySelector(".popup__close");
+const avatarPopupCloseButton = avatarPopup.querySelector(".popup__close");
 
 const profileFormElement = profilePopup.querySelector(".popup__form");
 const cardFormElement = cardPopup.querySelector(".popup__form");
+const avatarFormElement = avatarPopup.querySelector(".popup__form");
 
 const nameInput = profilePopup.querySelector(".popup__input_type_name");
 const jobInput = profilePopup.querySelector(".popup__input_type_description");
 const cardNameInput = cardPopup.querySelector(".popup__input_type_card-name");
 const cardLinkInput = cardPopup.querySelector(".popup__input_type_url");
+const avatarLinkInput = avatarPopup.querySelector(".popup__input_type_url");
 
 const profileTitle = document.querySelector(".profile__title");
 const profileDescription = document.querySelector(".profile__description");
@@ -105,7 +109,8 @@ getInitialCards().then(cards => {
 	});
 });
 
-
+profileImage.addEventListener("click", () => openModal(avatarPopup));
+avatarPopupCloseButton.addEventListener("click", () => closeModal(avatarPopup));
 
 profileEditButton.addEventListener("click", () => {
 	nameInput.value = profileTitle.textContent;
