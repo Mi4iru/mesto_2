@@ -73,4 +73,15 @@ function toggleLike(cardId, liked) {
     
 } 
 
-export {getInitialCards, fillProfile, editProfile, addCard, deleteCard, toggleLike}
+function editAvatar(link) {
+    return fetch(`${config.baseUrl}/users/me/avatar`, {
+        method: 'PATCH',
+        headers: config.headers,
+        body: JSON.stringify({
+            avatar: link
+        })
+    })
+        .then(res => res.json())
+}
+
+export {getInitialCards, fillProfile, editProfile, addCard, deleteCard, toggleLike, editAvatar}
