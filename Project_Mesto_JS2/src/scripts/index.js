@@ -75,16 +75,22 @@ const { openModal, closeModal } = getModal(onOpenPopup, onClosePopup);
 let userId;
 let user;
 
-fillProfile().then(prof => {
+const loading = (button) => {
+	button.textContent = "Сохранение...";
+};
+
+const endLoading = (button) => {
+	button.textContent = "Сохранить";
+}
+
+fillProfile()
+	.then(prof => {
 	profileTitle.textContent = prof.name;
 	profileDescription.textContent = prof.about;
 	userId = prof._id;
 	profileImage.style.backgroundImage = `url(${prof.avatar})`;
 	user = prof;
-
-})
-
-getInitialCards().then(cards => {
+	getInitialCards().then(cards => {
 	cards.forEach((card) => {
 		let liked = false;
 		for(let i=0; i<card.likes.length; i++){
@@ -109,6 +115,9 @@ getInitialCards().then(cards => {
 		placesContainer.append(cardElement);
 	});
 });
+})
+
+
 
 profileImage.addEventListener("click", () => {
 	avatarLinkInput.value = "";
@@ -118,11 +127,17 @@ avatarPopupCloseButton.addEventListener("click", () => closeModal(avatarPopup));
 
 function handleAvatarFormSubmit(evt) {
 	evt.preventDefault();
+	const saveButton = avatarFormElement.querySelector(".popup__button")
+	loading(saveButton);
 	const link = avatarLinkInput.value;
 
 	editAvatar(link)
 		.then(res => {
 			profileImage.style.backgroundImage = `url(${res.avatar})`;
+			
+		})
+		.finally(() => {
+			endLoading(saveButton);
 			closeModal(avatarPopup);
 		})
 }
@@ -141,6 +156,8 @@ profilePopupCloseButton.addEventListener("click", () =>
 
 function handleProfileFormSubmit(evt) {
 	evt.preventDefault();
+	const saveButton = profileFormElement.querySelector(".popup__button")
+	loading(saveButton);
 	const name = nameInput.value;
 	const job = jobInput.value;
 
@@ -149,12 +166,12 @@ function handleProfileFormSubmit(evt) {
 			.then(res => {
 				profileTitle.textContent = res['name'];
 				profileDescription.textContent = res.about;
-				closeModal(profilePopup);
+				
 			})
-	
-	
-
-	
+		.finally(() => {
+			endLoading(saveButton);
+			closeModal(profilePopup);
+		})
 }
 
 profileFormElement.addEventListener("submit", handleProfileFormSubmit);
@@ -169,6 +186,8 @@ cardPopupCloseButton.addEventListener("click", () => closeModal(cardPopup));
 
 function handleCardFormSubmit(evt) {
 	evt.preventDefault();
+	const saveButton = cardFormElement.querySelector(".popup__button")
+	loading(saveButton);
 	const name = cardNameInput.value;
 	const link = cardLinkInput.value;
 
@@ -185,8 +204,12 @@ function handleCardFormSubmit(evt) {
 										   imagePopupImage,
 										   openModal);
 				placesContainer.prepend(newCard);
-				closeModal(cardPopup);
+				
 			})
+		.finally(() => {
+			endLoading(saveButton);
+			closeModal(cardPopup);
+		})
 	
 }
 
