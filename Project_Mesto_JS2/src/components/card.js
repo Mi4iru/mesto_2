@@ -18,11 +18,10 @@ function createCard(name, link, likes, owner, liked, cardId, imagePopup, imagePo
 	if (liked) { likeButton.classList.add("card__like-button_is-active"); }
 	likeButton.addEventListener("click", () => {
 			toggleLike(cardId, likeButton.classList.contains("card__like-button_is-active"))
-				.then(res => res.json())
-					.then(res => {
-						likeButton.classList.toggle("card__like-button_is-active");
-						cardLikes.textContent = res.likes.length;
-					})
+				.then(res => {
+					likeButton.classList.toggle("card__like-button_is-active");
+					cardLikes.textContent = res.likes.length;
+				})
 			
 		}
 		
@@ -34,7 +33,6 @@ function createCard(name, link, likes, owner, liked, cardId, imagePopup, imagePo
 			deleteCard(cardId)
 				.then(res => {
 					deleteButton.closest(".card").remove();
-					console.log(res.json())
 				})
 		}	
 		);

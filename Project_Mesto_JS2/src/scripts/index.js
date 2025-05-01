@@ -90,32 +90,37 @@ fillProfile()
 	userId = prof._id;
 	profileImage.style.backgroundImage = `url(${prof.avatar})`;
 	user = prof;
-	getInitialCards().then(cards => {
-	cards.forEach((card) => {
-		let liked = false;
-		for(let i=0; i<card.likes.length; i++){
-			if (card.likes[i].name == user.name &&
-				card.likes[i].about == user.about) {
-					liked = true; 
-					break
+	getInitialCards()
+		.then(cards => {
+			cards.forEach((card) => {
+				let liked = false;
+				for(let i=0; i<card.likes.length; i++){
+					if (card.likes[i].name == user.name &&
+						card.likes[i].about == user.about) {
+							liked = true; 
+							break
+						}
 				}
-		}
-		const cardElement = createCard(
-			card.name,
-			card.link,
-			card.likes,
-			card.owner._id == userId,
-			liked,
-			card._id,
-			imagePopup,
-			imagePopupImage,
-			imagePopupCaption,
-			openModal
-		);
-		placesContainer.append(cardElement);
-	});
-});
-})
+				const cardElement = createCard(
+					card.name,
+					card.link,
+					card.likes,
+					card.owner._id == userId,
+					liked,
+					card._id,
+					imagePopup,
+					imagePopupImage,
+					imagePopupCaption,
+					openModal
+				);
+				placesContainer.append(cardElement);
+			});
+		})
+		.catch((err) => {
+			console.log(err);
+		});
+	})
+	.catch(err => console.log(err));
 
 
 
@@ -134,13 +139,15 @@ function handleAvatarFormSubmit(evt) {
 	editAvatar(link)
 		.then(res => {
 			profileImage.style.backgroundImage = `url(${res.avatar})`;
-			
-		})
-		.finally(() => {
-			endLoading(saveButton);
 			closeModal(avatarPopup);
 		})
-}
+
+		.catch(err => console.lof(err))
+
+		.finally(() => {
+			endLoading(saveButton);	
+		});
+};
 
 avatarFormElement.addEventListener("submit", handleAvatarFormSubmit);
 
@@ -162,16 +169,15 @@ function handleProfileFormSubmit(evt) {
 	const job = jobInput.value;
 
 	editProfile(name, job)
-		.then(res => res.json())
-			.then(res => {
-				profileTitle.textContent = res['name'];
-				profileDescription.textContent = res.about;
-				
-			})
-		.finally(() => {
-			endLoading(saveButton);
+		.then(res => {
+			profileTitle.textContent = res['name'];
+			profileDescription.textContent = res.about;
 			closeModal(profilePopup);
 		})
+		.catch(err => console.log(err))
+		.finally(() => {
+			endLoading(saveButton);
+		});
 }
 
 profileFormElement.addEventListener("submit", handleProfileFormSubmit);
@@ -192,25 +198,23 @@ function handleCardFormSubmit(evt) {
 	const link = cardLinkInput.value;
 
 	addCard(name, link)
-		.then(res => res.json())
-			.then(res => {
-				const newCard = createCard(res.name, 
-										   res.link, 
-										   res.likes,
-										   true,
-										   false,
-										   res._id,
-										   imagePopup,
-										   imagePopupImage,
-										   openModal);
-				placesContainer.prepend(newCard);
-				
-			})
-		.finally(() => {
-			endLoading(saveButton);
+		.then(res => {
+			const newCard = createCard(res.name, 
+										res.link, 
+										res.likes,
+										true,
+										false,
+										res._id,
+										imagePopup,
+										imagePopupImage,
+										openModal);
+			placesContainer.prepend(newCard);
 			closeModal(cardPopup);
 		})
-	
+		.catch(err => console.log(err))
+		.finally(() => {
+			endLoading(saveButton);
+		})
 }
 
 cardFormElement.addEventListener("submit", handleCardFormSubmit);

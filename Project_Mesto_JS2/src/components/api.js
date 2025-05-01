@@ -15,20 +15,24 @@ function getInitialCards() {
     return fetch(`${config.baseUrl}/cards`, {
         headers: config.headers
     })
-        .then(res => res.json())
-            .then((res) => {
-                return res
-            })
+        .then(res => {
+            if (res.ok) {
+                return res.json();
+            }
+            return Promise.reject(`Ошибка: ${res.status}`);
+        })
 }
 
 function fillProfile() {
     return fetch(`${config.baseUrl}/users/me`, {
         headers: config.headers
     })
-        .then(res => res.json())
-            .then(res => {
-                return res
-            })
+        .then(res => {
+            if (res.ok) {
+                return res.json();
+            }
+            return Promise.reject(`Ошибка: ${res.status}`);
+        })
 }
 
 function editProfile(name, description) {
@@ -40,6 +44,12 @@ function editProfile(name, description) {
             about: description
         })
     })
+        .then(res => {
+            if (res.ok) {
+                return res.json();
+            }
+            return Promise.reject(`Ошибка: ${res.status}`);
+        })
 }
 
 function addCard(name, link) {
@@ -51,6 +61,12 @@ function addCard(name, link) {
             link: link
         })
     })
+        .then(res => {
+            if (res.ok) {
+                return res.json();
+            }
+            return Promise.reject(`Ошибка: ${res.status}`);
+        })
 }
 
 function deleteCard(cardId) {
@@ -58,6 +74,12 @@ function deleteCard(cardId) {
         method: 'DELETE',
         headers: config.headers
     })
+        .then(res => {
+            if (res.ok) {
+                return res.json();
+            }
+            return Promise.reject(`Ошибка: ${res.status}`);
+        })
 }
 
 function toggleLike(cardId, liked) {
@@ -72,6 +94,12 @@ function toggleLike(cardId, liked) {
         method: method,
         headers: config.headers
     })
+        .then(res => {
+            if (res.ok) {
+                return res.json();
+            }
+            console.log(`Ошибка: ${res.status}`)
+        })
     
 } 
 
@@ -83,7 +111,12 @@ function editAvatar(link) {
             avatar: link
         })
     })
-        .then(res => res.json())
+        .then(res => {
+            if (res.ok) {
+                return res.json();
+            }
+            return Promise.reject(`Ошибка: ${res.status}`);
+        })
 }
 
 export {getInitialCards, fillProfile, editProfile, addCard, deleteCard, toggleLike, editAvatar}
