@@ -12,4 +12,4 @@
 * **Webpack** для сборки проекта
 
 ### **GitHub Pages**
-* [Ссылка на проект]()
+* [Ссылка на проект](https://mi4iru.github.io/mesto/)
